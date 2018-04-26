@@ -23,7 +23,7 @@ db.sequelize.sync().done(() => {
     const {
       params: { user },
     } = ctx;
-    const res = await db.models.task.findAll({ user_id: user });
+    const res = await db.models.task.findAll({ where: { user_id: user } });
     ctx.type = 'json';
     ctx.body = JSON.stringify(res);
     next();
@@ -34,7 +34,7 @@ db.sequelize.sync().done(() => {
     } = ctx;
     const payload = {
       ...ctx.request.body,
-      user,
+      user_id: user,
     };
     const res = await db.models.task.create(payload);
     ctx.type = 'json';
@@ -42,13 +42,19 @@ db.sequelize.sync().done(() => {
     next();
   });
   route.put('/:user/tasks/:task', async (ctx, next) => {
-    const {
-      params: { user, task },
-    } = ctx;
+    const { user, task } = ctx.params;
     const res = await db.models.task.update(ctx.request.body, { where: { user_id: user, id: task } });
     console.log(res);
     ctx.type = 'json';
     ctx.body = JSON.stringify(res);
+    next();
+  });
+  route.delete('/:user/tasks/:task', async (ctx, next) => {
+    const {
+      params: { user, task },
+    } = ctx;
+    await db.models.task.destroy({ where: { id: task, user_id: user } });
+    ctx.status = 204;
     next();
   });
   route.post('/users', async (ctx, next) => {
