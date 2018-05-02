@@ -1,34 +1,34 @@
-const fs = require('fs')
-const path = require('path')
-const Sequelize = require('sequelize')
-let db
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
 
-module.exports = () => {
-  if (!db) {
-    let sequelize = new Sequelize(
-      'tasks',
-      'daw',
-      '123123123',
-      {
-        define: {
-          underscored: true
-        },
-        dialect: 'sqlite',
-        storage: 'tasks.sqlite'
-      }
-    )
-    db = {
+let database;
+
+module.exports = app => {
+  const {
+    lib: { config: db },
+  } = app;
+  if (!database) {
+    const sequelize = new Sequelize(db.name, db.user, db.pass, {
+      define: {
+        underscored: true,
+      },
+      dialect: 'sqlite',
+      storage: db.storage,
+      operatorsAliases: false,
+    });
+    database = {
       sequelize,
       Sequelize,
-      models: {}
-    }
-    const dir = path.join(__dirname, 'models')
+      models: {},
+    };
+    const dir = path.join(__dirname, 'models');
     fs.readdirSync(dir).map(file => {
-      const modelDir = path.join(dir, file)
-      const model = sequelize.import(modelDir)
-      db.models[model.name] = model
-    })
-    Object.keys(db.models).map(key => db.models[key].associate(db.models))
+      const modelDir = path.join(dir, file);
+      const model = sequelize.import(modelDir);
+      database.models[model.name] = model;
+    });
+    Object.keys(database.models).map(key => database.models[key].associate(database.models));
   }
-  return db
-}
+  return database;
+};
