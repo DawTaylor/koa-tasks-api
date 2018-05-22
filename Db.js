@@ -9,15 +9,18 @@ module.exports = app => {
     lib: { config: db },
   } = app;
   if (!database) {
-    const sequelize = new Sequelize(db.name, db.user, db.pass, {
-      define: {
-        underscored: true,
-      },
-      dialect: 'sqlite',
-      storage: db.storage,
-      operatorsAliases: false,
-      logging: false,
-    });
+    const sequelize = !db.dbUri
+      ? new Sequelize(db.name, db.user, db.pass, {
+          define: {
+            underscored: true,
+          },
+          dialect: 'sqlite',
+          storage: db.storage,
+          operatorsAliases: false,
+          logging: false,
+        })
+      : new Sequelize(db.dbUri);
+
     database = {
       sequelize,
       Sequelize,
