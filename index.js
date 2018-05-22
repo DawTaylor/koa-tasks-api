@@ -3,7 +3,7 @@ const consign = require('consign');
 
 const app = new Koa();
 
-consign({ verbose: false })
+consign({ verbose: true })
   .include('lib/config.js')
   .include('lib/middlewares.js')
   .include('db.js')
