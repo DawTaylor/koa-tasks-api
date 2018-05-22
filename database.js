@@ -8,7 +8,6 @@ pg.defaults.ssl = true;
 let database;
 
 module.exports = app => {
-  console.log('Creating database instance');
   const {
     lib: {
       config: { db },
@@ -37,6 +36,5 @@ module.exports = app => {
     database.models[model.name] = model;
   });
   Object.keys(database.models).map(key => database.models[key].associate(database.models));
-  console.log(database);
   return database;
 };
