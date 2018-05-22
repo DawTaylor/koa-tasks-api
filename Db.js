@@ -13,8 +13,7 @@ module.exports = app => {
       config: { db },
     },
   } = app;
-  if (!database) {
-    console.log(db.dbUri);
+  if (typeof database !== 'object') {
     const sequelize = !db.dbUri
       ? new Sequelize(db.name, db.user, db.pass, {
           define: {
