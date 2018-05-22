@@ -1,14 +1,20 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+const pg = require('pg');
+
+pg.defaults.ssl = true;
 
 let database;
 
 module.exports = app => {
   const {
-    lib: { config: db },
+    lib: {
+      config: { db },
+    },
   } = app;
   if (!database) {
+    console.log(db.dbUri);
     const sequelize = !db.dbUri
       ? new Sequelize(db.name, db.user, db.pass, {
           define: {
@@ -17,9 +23,8 @@ module.exports = app => {
           dialect: 'sqlite',
           storage: db.storage,
           operatorsAliases: false,
-          logging: false,
         })
-      : new Sequelize(db.dbUri);
+      : new Sequelize(db.dbUri, { define: { underscored: true } });
 
     database = {
       sequelize,
