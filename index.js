@@ -1,11 +1,9 @@
 const Koa = require('koa');
-const bcrypt = require('bcrypt');
-
 const consign = require('consign');
 
 const app = new Koa();
 
-consign()
+consign({ verbose: false })
   .include('lib/config.js')
   .include('lib/middlewares.js')
   .include('db.js')

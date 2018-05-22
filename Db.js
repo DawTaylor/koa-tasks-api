@@ -16,6 +16,7 @@ module.exports = app => {
       dialect: 'sqlite',
       storage: db.storage,
       operatorsAliases: false,
+      logging: false,
     });
     database = {
       sequelize,
