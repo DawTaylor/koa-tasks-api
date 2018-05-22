@@ -36,5 +36,6 @@ module.exports = app => {
     database.models[model.name] = model;
   });
   Object.keys(database.models).map(key => database.models[key].associate(database.models));
+  console.log(database);
   return database;
 };
