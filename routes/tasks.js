@@ -1,4 +1,5 @@
 module.exports = app => {
+  console.log('App', Object.keys(app.db));
   const {
     lib: {
       middlewares: { router },
