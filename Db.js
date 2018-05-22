@@ -8,6 +8,7 @@ pg.defaults.ssl = true;
 let database;
 
 module.exports = app => {
+  console.log('Creating database instance');
   const {
     lib: {
       config: { db },
