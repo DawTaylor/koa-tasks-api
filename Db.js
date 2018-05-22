@@ -13,32 +13,28 @@ module.exports = app => {
       config: { db },
     },
   } = app;
-  console.log('database', typeof database);
-  if (typeof database !== 'object') {
-    console.log('URI', db.dbUri);
-    const sequelize = !db.dbUri
-      ? new Sequelize(db.name, db.user, db.pass, {
-          define: {
-            underscored: true,
-          },
-          dialect: 'sqlite',
-          storage: db.storage,
-          operatorsAliases: false,
-        })
-      : new Sequelize(db.dbUri, { define: { underscored: true } });
+  const sequelize = !db.dbUri
+    ? new Sequelize(db.name, db.user, db.pass, {
+        define: {
+          underscored: true,
+        },
+        dialect: 'sqlite',
+        storage: db.storage,
+        operatorsAliases: false,
+      })
+    : new Sequelize(db.dbUri, { define: { underscored: true } });
 
-    database = {
-      sequelize,
-      Sequelize,
-      models: {},
-    };
-    const dir = path.join(__dirname, 'models');
-    fs.readdirSync(dir).map(file => {
-      const modelDir = path.join(dir, file);
-      const model = sequelize.import(modelDir);
-      database.models[model.name] = model;
-    });
-    Object.keys(database.models).map(key => database.models[key].associate(database.models));
-  }
+  database = {
+    sequelize,
+    Sequelize,
+    models: {},
+  };
+  const dir = path.join(__dirname, 'models');
+  fs.readdirSync(dir).map(file => {
+    const modelDir = path.join(dir, file);
+    const model = sequelize.import(modelDir);
+    database.models[model.name] = model;
+  });
+  Object.keys(database.models).map(key => database.models[key].associate(database.models));
   return database;
 };
