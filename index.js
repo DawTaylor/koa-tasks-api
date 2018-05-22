@@ -6,7 +6,7 @@ const app = new Koa();
 consign({ verbose: true })
   .include('lib/config.js')
   .include('lib/middlewares.js')
-  .include('Db.js')
+  .include('db.js')
   .include('routes')
   .include('lib/boot.js')
   .into(app);
